@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/resources/images">
+        <file>res/toolbar-compare.png</file>
+        <file>res/toolbar-folderdiff.png</file>
+        <file>res/toolbar-prevdiff.png</file>
+        <file>res/toolbar-nextdiff.png</file>
+        <file>res/toolbar-about.png</file>
+        <file>res/xdiffr.png</file>
+        <file>res/toolbar-settings.png</file>
+    </qresource>
+</RCC>

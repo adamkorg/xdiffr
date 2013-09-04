@@ -1,0 +1,4 @@
+# Qt user settings. Other stuff (like executables, moc files) should be separate directories.
+
+*.pro.user
+*.pro.user.*
