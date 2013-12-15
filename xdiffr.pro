@@ -25,7 +25,8 @@ HEADERS  += mainwindow.h \
     qdifftextedit.h \
     foldersdlg.h \
     aboutdlg.h \
-    settingsdlg.h
+    settingsdlg.h \
+    version.h
 
 FORMS    += mainwindow.ui \
     aboutdlg.ui

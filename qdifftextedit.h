@@ -31,6 +31,8 @@ public:
     int getPreviousChangeLine();
     void scrollToLine(int nLine);
 
+    void appendPlainText(const char *pStrText);
+
 signals:
     
 public slots:
@@ -41,10 +43,18 @@ private slots:
 protected:
     virtual void paintEvent(QPaintEvent *_event);
 
+    void setTextAttributes();
+
+    static const std::string DEFAULT_FONT_NAME;
+    static const int DEFAULT_FONT_SIZE;
+    static const int DEFAULT_TAB_SIZE;
+
     CDiffDoc* m_pDiffDoc;
     int m_nView;
     int m_nLineHeight;
     int m_nTopBorder;
+
+    QFont m_font;
 };
 
 #endif // QDIFFTEXTEDIT_H

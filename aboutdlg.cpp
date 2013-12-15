@@ -13,6 +13,7 @@
 
 #include "aboutdlg.h"
 #include "ui_aboutdlg.h"
+#include "version.h"
 
 AboutDlg::AboutDlg(QWidget *parent) :
     QDialog(parent),
@@ -24,6 +25,11 @@ AboutDlg::AboutDlg(QWidget *parent) :
     ui->label->setOpenExternalLinks(true);
 
     setWindowIcon(QIcon(":/resources/images/res/toolbar-about.png"));
+
+    //Update version information from version.h define
+    QString strLabel = ui->label->text();
+    strLabel.replace("1.0 build 1", VER_PRODUCTVERSION_STR);
+    ui->label->setText(strLabel);
 
 }
 

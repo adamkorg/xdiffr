@@ -177,56 +177,46 @@ void MainWindow::LoadDocIntoEditControl(int nView, QDiffTextEdit* diffEdit)
     line_array::iterator it = lines.begin();
     for ( ; it != lines.end(); ++it) {
         bool bDifferent = (it->m_nLink == -1);
-//        diffEdit->setTextColor(bDifferent?tcRed:tcOriginal);
-        if ((it == lines.begin()) && (it->m_strLine == "")) {
-            diffEdit->setPlainText(" "); //blank line space character hack. See comments below.
-            bBlankFirstLine = true;
-        }
-        else {
-            //Not the first line, so we do our append logic.
 
-            //Append optimisation. Big files were very slow to load because of the string appends.
-            //Let's look ahead and generate a big string of all the lines from the current section section.
-            strAppend = "";
-            if (nLine > secs[nSec].m_nLastLine)
-                nSec++;
-            if ((nLine >= secs[nSec].m_nFirstLine) && (nLine <= secs[nSec].m_nLastLine)) {
-                //first set the text colour. Can be Identical, Different, OnlyInLeft, OnlyInRight
-                QColor clr;
-                if (bDifferent) {
-                    if (secs[nSec].m_nLink != -1)
-                        clr =  m_diffDoc.getClrDifferent();
-                    else
-                        clr = (nView == VIEW_LEFT) ? m_diffDoc.getClrOnlyLeft() : m_diffDoc.getClrOnlyRight();
-                }
+        //Append optimisation. Big files were very slow to load because of the string appends.
+        //Let's look ahead and generate a big string of all the lines from the current section.
+        strAppend = "";
+        if (nLine > secs[nSec].m_nLastLine)
+            nSec++;
+        if ((nLine >= secs[nSec].m_nFirstLine) && (nLine <= secs[nSec].m_nLastLine)) {
+            //first set the text colour. Can be Identical, Different, OnlyInLeft, OnlyInRight
+            QColor clr;
+            if (bDifferent) {
+                if (secs[nSec].m_nLink != -1)
+                    clr =  m_diffDoc.getClrDifferent();
                 else
-                    clr = m_diffDoc.getClrIdentical();
-                diffEdit->setTextColor(clr);
-
-                //now construct a string with all the lines in this section
-                while (nLine < secs[nSec].m_nLastLine) {
-                    strAppend += lines[nLine].m_strLine;
-                    strAppend += "\n";
-                    ++it;
-                    ++nLine;
-                }
-                strAppend += lines[nLine].m_strLine;
+                    clr = (nView == VIEW_LEFT) ? m_diffDoc.getClrOnlyLeft() : m_diffDoc.getClrOnlyRight();
             }
+            else
+                clr = m_diffDoc.getClrIdentical();
+            diffEdit->setTextColor(clr);
+
+            //now construct a string with all the lines in this section
+            while (nLine < secs[nSec].m_nLastLine) {
+                strAppend += lines[nLine].m_strLine;
+                strAppend += "\n";
+                ++it;
+                ++nLine;
+            }
+            strAppend += lines[nLine].m_strLine;
+            strAppend += "\n";
 
             //now add this section's text to the edit control
-            diffEdit->append(strAppend.c_str());
+            diffEdit->appendPlainText(strAppend.c_str());
         }
         nLine++;
     }
 
     diffEdit->setTextColor(tcOriginal);
 
-    //If the first line is empty then QTextEdit does not want to display the line, so
-    //I use this hack. I add a space character (above) and here I delete that space character.
+    //Reset cursor to top of document
     QTextCursor c = diffEdit->textCursor();
     c.movePosition(QTextCursor::Start);
-    if (bBlankFirstLine)
-        c.deleteChar();
 }
 
 QDiffTextEdit* MainWindow::getDiffEdit(int nView)

@@ -23,17 +23,16 @@
 #define OTHERVIEW(n) ((!(n-1))+1)
 
 
-QDiffTextEdit::QDiffTextEdit(QWidget *parent) :
-    QTextEdit(parent)
-{
-    QFont font("Monospace", 8);
-    font.setStyleHint(QFont::TypeWriter);
-    setCurrentFont(font);
-    setLineWrapMode(QTextEdit::NoWrap);
+const std::string QDiffTextEdit::DEFAULT_FONT_NAME = "Monospace";
+const int QDiffTextEdit::DEFAULT_FONT_SIZE = 8;
+const int QDiffTextEdit::DEFAULT_TAB_SIZE = 4;
 
-    const int tabStop = 4;  // 4 characters
-    QFontMetrics metrics(font);
-    setTabStopWidth(tabStop * metrics.width(' '));
+QDiffTextEdit::QDiffTextEdit(QWidget *parent) :
+    QTextEdit(parent),
+    m_font(DEFAULT_FONT_NAME.c_str(), DEFAULT_FONT_SIZE)
+{
+    m_font.setStyleHint(QFont::TypeWriter);
+    setTextAttributes();
 
     m_pDiffDoc = NULL;
     m_nView = 0;
@@ -222,4 +221,20 @@ void QDiffTextEdit::scrollToLine(int nLine)
         nScrollY = 0;
 
     verticalScrollBar()->setValue(nScrollY);
+}
+
+void QDiffTextEdit::setTextAttributes()
+{
+    setCurrentFont(m_font);
+    setLineWrapMode(QTextEdit::NoWrap);
+
+    QFontMetrics fm(m_font);
+    const int tabStop = DEFAULT_TAB_SIZE;  // 4 characters
+    setTabStopWidth(tabStop * fm.width(' '));
+}
+
+void QDiffTextEdit::appendPlainText(const char *pStrText)
+{
+    setTextAttributes();
+    insertPlainText (pStrText);
 }
